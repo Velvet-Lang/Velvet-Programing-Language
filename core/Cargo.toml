@@ -1,1 +1,17 @@
+[package]
+name = "velvet-core"
+version = "0.1.0"
+edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "staticlib"]  # Dla FFI do C
+
+[dependencies]
+anyhow = "1.0"
+llvm-sys = "0.15"  # Dla kompilacji do natywnego kodu (wydajność C)
+pest = "2.7"
+pest_derive = "2.7"
+serde_json = "1.0"  # Dla serializacji AST w FFI (opcjonalnie, dla uproszczenia)
+
+[build-dependencies]
+cc = "1.0"  # Do budowania C z Rust
