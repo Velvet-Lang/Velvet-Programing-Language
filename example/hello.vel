@@ -1,0 +1,6 @@
+
+[rust_std] @ Import safe std lib
+echo "Hello from Velvet!" > output.txt @ Wyświetl i zapisz (bezpieczne I/O)
+if [true]; then
+    ls -l
+fi < input.txt  # Redirect input
