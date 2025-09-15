@@ -5,7 +5,6 @@ pub mod ffi;
 pub mod runtime;
 
 use anyhow::Result;
-use nom::IResult;
 
 // Przykładowa struktura AST dla Velvet (shell-like)
 #[derive(Debug)]
@@ -14,13 +13,12 @@ pub enum VelvetAst {
     Dependency(String),            // [dep]
     Comment(String),
     IoRedir(String, String),       // > file
-    IfThen(Vec<VelvetAst>, Vec<VelvetAst>),
+    IfThen(Vec<VelvetAst>, Vec<VelvetAst>),  // if [cond]; then body; fi
 }
 
-// Parser (uproszczony nom-based dla shell składni)
+// Parser: używa Pest do parsowania
 pub fn parse_velvet(input: &str) -> Result<Vec<VelvetAst>> {
-    let (_, ast) = parser::velvet_parser(input).map_err(|e| anyhow::anyhow!("Parse error: {:?}", e))?;
-    Ok(ast)
+    parser::parse_velvet(input)
 }
 
 // Kompilator: translacja do Rust code (dla bezpieczeństwa i wydajności)
