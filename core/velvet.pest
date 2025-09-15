@@ -1,0 +1,32 @@
+// core/velvet.pest
+// Gramatyka dla Velvet Language, inspirowana shellową składnią
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }
+COMMENT = @{ "@" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) } // Komentarz: @ coś coś
+
+// Podstawowe tokeny
+ident = { ('a'..'z' | 'A'..'Z' | '_' | '-') ~ ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-')* } // Identyfikatory (np. echo, ls)
+string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" } // Stringi w cudzysłowach
+path = { ('a'..'z' | 'A'..'Z' | '/' | '.' | '-')+ } // Ścieżki plików (np. output.txt)
+
+// Import zależności: [nazwa]
+dependency = { "[" ~ ident ~ "]" }
+
+// Przekierowania I/O: > file, < file
+redir = { (">" | "<") ~ WHITESPACE? ~ path }
+
+// Komenda: np. echo "Hello" > file
+command = { ident ~ (WHITESPACE ~ (string | ident))* ~ (WHITESPACE? ~ redir)? }
+
+// Wyrażenie warunkowe: if [cond]; then ... fi
+if_block = { 
+    "if" ~ WHITESPACE ~ "[" ~ ident ~ "]" ~ WHITESPACE? ~ ";" ~ WHITESPACE? ~ 
+    "then" ~ WHITESPACE? ~ statement* ~ WHITESPACE? ~ 
+    "fi" 
+}
+
+// Główne wyrażenie: komenda, import, komentarz, if
+statement = _{ dependency | command | COMMENT | if_block }
+
+// Program: lista statements
+program = { SOI ~ (statement ~ WHITESPACE?)* ~ EOI }
