@@ -1,32 +1,30 @@
 // core/velvet.pest
-// Gramatyka dla Velvet Language, inspirowana shellową składnią
-
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" }
-COMMENT = @{ "@" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) } // Komentarz: @ coś coś
+COMMENT = @{ "@" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) }
 
-// Podstawowe tokeny
-ident = { ('a'..'z' | 'A'..'Z' | '_' | '-') ~ ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-')* } // Identyfikatory (np. echo, ls)
-string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" } // Stringi w cudzysłowach
-path = { ('a'..'z' | 'A'..'Z' | '/' | '.' | '-')+ } // Ścieżki plików (np. output.txt)
+ident = { ('a'..'z' | 'A'..'Z' | '_' | '-') ~ ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-')* }
+string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+path = { ('a'..'z' | 'A'..'Z' | '/' | '.' | '-')+ }
 
-// Import zależności: [nazwa]
 dependency = { "[" ~ ident ~ "]" }
-
-// Przekierowania I/O: > file, < file
 redir = { (">" | "<") ~ WHITESPACE? ~ path }
-
-// Komenda: np. echo "Hello" > file
 command = { ident ~ (WHITESPACE ~ (string | ident))* ~ (WHITESPACE? ~ redir)? }
+sys_command = { "sudo" | "apt" | "echo" | "powershell" | "dir" }  // OS-specific examples
 
-// Wyrażenie warunkowe: if [cond]; then ... fi
-if_block = { 
-    "if" ~ WHITESPACE ~ "[" ~ ident ~ "]" ~ WHITESPACE? ~ ";" ~ WHITESPACE? ~ 
-    "then" ~ WHITESPACE? ~ statement* ~ WHITESPACE? ~ 
-    "fi" 
+// Sekcje #lang { code }
+section = { "#" ~ ident ~ WHITESPACE? ~ "{" ~ (!"}" ~ ANY)* ~ "}" }
+
+// Deklaratywny dla #velvet: linie
+decl_line = { 
+    (ident | ASCII_DIGIT+) ~ WHITESPACE? ~ "<" ~ WHITESPACE? ~ ident |  // val < var
+    ident ~ WHITESPACE? ~ "*" ~ WHITESPACE? ~ ident ~ WHITESPACE? ~ ">" ~ WHITESPACE? ~ ident |  // A * B > C
+    ident ~ WHITESPACE? ~ "^" ~ WHITESPACE? ~ ident ~ WHITESPACE? ~ ">" ~ WHITESPACE? ~ ident |  // C ^ inc > D
+    "?" ~ ident  // ?D
 }
 
-// Główne wyrażenie: komenda, import, komentarz, if
-statement = _{ dependency | command | COMMENT | if_block }
+// If block (bez zmian)
 
-// Program: lista statements
+// Statement: dodano section, sys_command, decl_line
+statement = _{ dependency | command | sys_command | COMMENT | section | decl_line | if_block }
+
 program = { SOI ~ (statement ~ WHITESPACE?)* ~ EOI }
