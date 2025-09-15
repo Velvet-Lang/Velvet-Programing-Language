@@ -15,7 +15,6 @@
             color: #333;
             min-height: 100vh;
         }
-
         header {
             background-color: #4d2da8;
             padding: 15px 30px;
@@ -27,16 +26,13 @@
             top: 0;
             z-index: 1000;
         }
-
         .logo {
             height: 60px;
             transition: transform 0.3s ease;
         }
-
         .logo:hover {
             transform: scale(1.1);
         }
-
         nav ul {
             list-style: none;
             margin: 0;
@@ -44,7 +40,6 @@
             display: flex;
             gap: 30px;
         }
-
         nav ul li a {
             color: white;
             text-decoration: none;
@@ -54,17 +49,14 @@
             border-radius: 5px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
         nav ul li a:hover {
             background-color: #ab6eed;
             color: white;
         }
-
         nav ul li a.active {
             background-color: #aa6dec;
             color: white;
         }
-
         main {
             max-width: 800px;
             margin: 40px auto;
@@ -74,45 +66,86 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             text-align: center;
         }
-
         h1 {
             color: #4d2da8;
             font-size: 36px;
             margin-bottom: 20px;
             font-weight: 600;
         }
-
-        p {
-            color: #333;
-            font-size: 18px;
-            line-height: 1.6;
-            margin: 0 auto;
-            max-width: 600px;
+        .install-instructions {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            margin-top: 20px;
         }
-
+        .install-option {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .install-option h3 {
+            color: #4d2da8;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .install-option code {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            position: relative;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .copy-btn {
+            background-color: #4d2da8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background-color: #ab6eed;
+        }
+        .copy-btn:active {
+            background-color: #aa6dec;
+        }
         /* Responsive Design */
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             nav ul {
                 flex-direction: column;
                 gap: 10px;
                 margin-top: 10px;
             }
-
             .logo {
                 height: 50px;
             }
-
             h1 {
                 font-size: 28px;
             }
-
-            p {
-                font-size: 16px;
+            .install-option {
+                padding: 15px;
+            }
+            .install-option h3 {
+                font-size: 18px;
+            }
+            .install-option code {
+                font-size: 12px;
             }
         }
     </style>
@@ -130,7 +163,29 @@
     </header>
     <main>
         <h1>Pobierz Velvet</h1>
-        <p>Dla windows: curl -L -o "$env:TEMP\install.sh" https://raw.githubusercontent.com/Velvet-Lang/Velvet-Programing-Language/main/install/install.sh dla linux/macos: curl -L -o /tmp/install.sh https://raw.githubusercontent.com/Velvet-Lang/Velvet-Programing-Language/main/install/install.sh</p>
+        <div class="install-instructions">
+            <div class="install-option">
+                <h3>Windows</h3>
+                <code id="windows-command">curl -L -o "$env:TEMP\install.sh" https://raw.githubusercontent.com/Velvet-Lang/Velvet-Programing-Language/main/install/install.sh</code>
+                <button class="copy-btn" onclick="copyCommand('windows-command')">Kopiuj</button>
+            </div>
+            <div class="install-option">
+                <h3>Linux/macOS</h3>
+                <code id="linux-command">curl -L -o /tmp/install.sh https://raw.githubusercontent.com/Velvet-Lang/Velvet-Programing-Language/main/install/install.sh</code>
+                <button class="copy-btn" onclick="copyCommand('linux-command')">Kopiuj</button>
+            </div>
+        </div>
     </main>
+    <script>
+        function copyCommand(elementId) {
+            const command = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(command).then(() => {
+                alert('Skopiowano do schowka!');
+            }).catch(err => {
+                console.error('Błąd kopiowania: ', err);
+                alert('Błąd podczas kopiowania!');
+            });
+        }
+    </script>
 </body>
 </html>
