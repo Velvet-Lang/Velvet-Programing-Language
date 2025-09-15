@@ -44,7 +44,6 @@ pub extern "C" fn run_velvet_ffi(input: *const c_char) {
     }
 }
 
-// Nowa: Klonuj git repo (użyj git2)
 #[no_mangle]
 pub extern "C" fn clone_git_repo_ffi(repo: *const c_char, dest: *const c_char) -> *const c_char {
     unsafe {
