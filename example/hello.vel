@@ -1,6 +1,18 @@
+[gui-web] @ Import biblioteki GUI
+sudo apt update @ Aktualizacja systemu (Linux)
+echo "System zaktualizowany!"
 
-[rust_std] @ Import safe std lib
-echo "Hello from Velvet!" > output.txt @ Wyświetl i zapisz (bezpieczne I/O)
-if [true]; then
-    ls -l
-fi < input.txt  # Redirect input
+#python {
+print("Witaj z Pythona w Velvet - BETA")
+x = 10
+print(f"Wartość x: {x}")
+}
+
+#velvet {
+@ Przykładowy program deklaratywny
+5 < A @ Przypisanie: A = 5
+3 < B @ Przypisanie: B = 3
+A * B > C @ Mnożenie: C = A * B
+C ^ inc > D @ Pipeline: D = inc(C)
+?D @ Wyświetl: D (powinno być 16)
+}
