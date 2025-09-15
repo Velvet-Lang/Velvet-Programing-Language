@@ -8,7 +8,12 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 2
 
 stable
+complete
+y
+1
 echo "[BUILD] Building Binars..."
-echo "[MOVE] Transfering Binaras.."
+cd /tmp/Velvet-Programing-Language/
+cargo build --release
+echo "[MOVE] Transfering Binars..."
 sudo mv /tmp/Velvet-Programing-Language/target/release/weave /usr/bin/
-sudo 
+echo "[INFO] Operation Complete :D - now run weave help or vel help"
