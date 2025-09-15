@@ -8,10 +8,11 @@ crate-type = ["cdylib", "staticlib"]  # Dla FFI do C
 
 [dependencies]
 anyhow = "1.0"
-llvm-sys = "0.15"  # Dla kompilacji do natywnego kodu (wydajność C)
+llvm-sys = "0.15"
 pest = "2.7"
 pest_derive = "2.7"
-serde_json = "1.0"  # Dla serializacji AST w FFI (opcjonalnie, dla uproszczenia)
+serde_json = "1.0"
+git2 = "0.18"  # Dla klonowania GitHub w runtime (FFI expose)
 
 [build-dependencies]
-cc = "1.0"  # Do budowania C z Rust
+cc = "1.0"
