@@ -1,0 +1,10 @@
+[package]
+name = "velvet-repl"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pest = "2.7.12"
+pest_derive = "2.7.12"
+crossterm = "0.28.1"
+rustyline = "14.0.0"  # For REPL input
