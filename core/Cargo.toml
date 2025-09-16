@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-nom = "7.1.3"  # For parser combinators
+pest = "2.7.12"
+pest_derive = "2.7.12"
 
 [[bin]]
 name = "velvetc"
-path = "core/src/main.rs"
+path = "src/main.rs"
