@@ -10,22 +10,22 @@ pub fn generate_o(ast: &[AstNode], output: &str) -> Result<(), String> {
 
     for node in ast {
         match node {
-            AstNode::Output(s) => {
+            AstNode::Output(expr) => {
                 let msg_label = format!("msg_{}", label_count);
                 asm.push_str(&format!(
                     "mov $1, %rax\nmov $1, %rdi\nlea {}, %rsi\nmov ${}, %rdx\nsyscall\n",
-                    msg_label, s.len()
+                    msg_label, expr.len()
                 ));
-                asm.push_str(&format!("{}: .ascii \"{}\"\n", msg_label, s));
+                asm.push_str(&format!("{}: .ascii \"{}\"\n", msg_label, expr));
                 label_count += 1;
             }
             AstNode::Embed("python", code) => {
                 asm.push_str("; Python FFI (stub)\n");
-                // Placeholder: Call Python runtime via libpython
+                // TODO: Link libpython, call PyRun_SimpleString
             }
-            AstNode::Embed("shell", code) => {
-                asm.push_str("; Shell FFI (stub)\n");
-                // Placeholder: Call system()
+            AstNode::Embed("js", code) => {
+                asm.push_str("; JS FFI (stub)\n");
+                // TODO: Link V8 or QuickJS
             }
             AstNode::If(expr, cmd) => {
                 let parts: Vec<&str> = expr.split("==").collect();
@@ -66,13 +66,43 @@ pub fn generate_o(ast: &[AstNode], output: &str) -> Result<(), String> {
                     label_count += 1;
                 }
             }
+            AstNode::Let { mutable, name, ty, value } => {
+                asm.push_str(&format!("; Let {} = {} (mutable: {})\n", name, value, mutable));
+                // TODO: Store in memory/register
+            }
+            AstNode::Match { value, arms } => {
+                let end_label = format!("match_end_{}", label_count);
+                for (i, (pattern, range_end, expr)) in arms.iter().enumerate() {
+                    let arm_label = format!("arm_{}_{}", label_count, i);
+                    if let Some(end) = range_end {
+                        asm.push_str(&format!("cmp ${}, %rax\njge {}\n", pattern));
+                        asm.push_str(&format!("cmp ${}, %rax\njle {}\n", end));
+                    } else {
+                        asm.push_str(&format!("cmp ${}, %rax\nje {}\n", pattern));
+                    }
+                    asm.push_str(&format!("{}:\n", arm_label));
+                    asm.push_str(&format!("mov $1, %rax\nmov $1, %rdi\nlea msg_{}, %rsi\nmov ${}, %rdx\nsyscall\n", label_count, expr.len()));
+                    asm.push_str(&format!("msg_{}: .ascii \"{}\"\n", label_count, expr));
+                    asm.push_str(&format!("jmp {}\n", end_label));
+                    label_count += 1;
+                }
+                asm.push_str(&format!("{}:\n", end_label));
+            }
+            AstNode::Spawn(expr) => {
+                asm.push_str("; Spawn async task (stub)\n");
+                // TODO: Thread creation or async runtime
+            }
+            AstNode::Try(expr) => {
+                asm.push_str("; Try error handling (stub)\n");
+                // TODO: Unwrap Result
+            }
             _ => {}
         }
     }
 
     asm.push_str("mov $60, %rax\nxor %rdi, %rdi\nsyscall\n");
 
-    fs::create_dir_all("build").map_err(|e| e.to_string())?;
+    std::fs::create_dir_all("build").map_err(|e| e.to_string())?;
     let asm_file = "build/temp.s";
     let mut file = File::create(asm_file).map_err(|e| format!("Failed to create {}: {}", asm_file, e))?;
     file.write_all(asm.as_bytes()).map_err(|e| e.to_string())?;
