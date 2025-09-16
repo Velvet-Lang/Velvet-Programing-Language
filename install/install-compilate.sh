@@ -14,6 +14,7 @@ y
 echo "[BUILD] Building Binars..."
 cd /tmp/Velvet-Programing-Language/
 cargo build --release
+zig build
 echo "[MOVE] Transfering Binars..."
 sudo mv /tmp/Velvet-Programing-Language/target/release/weave /usr/bin/
 echo "[INFO] Operation Complete :D - now run weave help or vel help"
