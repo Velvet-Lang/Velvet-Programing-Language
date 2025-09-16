@@ -3,14 +3,32 @@ COMMENT = { "@" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) }
 
 identifier = { ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_")* }
 string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+number = { ASCII_DIGIT+ }
+type = { "int" | "float" | "string" | "bool" | identifier }
 
 dependency = { "[" ~ "Zależność" ~ "]" ~ identifier }
 embed = { "#" ~ identifier ~ "{" ~ (!"}" ~ ANY)* ~ "}" }
-output = { "[Output] >" ~ string ~ "| print" }
+output = { "[Output] >" ~ expression ~ "| print" }
 if_stmt = { "[If] >" ~ expression ~ "|" ~ command }
-loop_stmt = { "[Loop] >" ~ (ASCII_DIGIT+ | identifier) ~ "|" ~ command }
-command = { output | if_stmt | loop_stmt }
+loop_stmt = { "[Loop] >" ~ expression ~ "|" ~ command }
+let_stmt = { "let" ~ ("mut" ~ WHITESPACE)? ~ identifier ~ (":" ~ type)? ~ "=" ~ expression }
+match_stmt = { "match" ~ expression ~ "{" ~ match_arm+ ~ "}" }
+match_arm = { expression ~ (".." ~ expression)? ~ "->" ~ expression }
+spawn_stmt = { "spawn" ~ expression }
+try_stmt = { "try" ~ expression }
+command = { output | if_stmt | loop_stmt | let_stmt | match_stmt | spawn_stmt | try_stmt }
 
-expression = { identifier ~ ("==" | "!=" | "<" | ">") ~ (ASCII_DIGIT+ | identifier) }
+expression = _{ identifier | number | string | call_expr | pipe_expr | result_expr | option_expr }
+call_expr = { identifier ~ "(" ~ (expression ~ ("," ~ expression)*)? ~ ")" }
+pipe_expr = { expression ~ "|>" ~ expression }
+result_expr = { "Ok" ~ "(" ~ expression ~ ")" | "Err" ~ "(" ~ expression ~ ")" }
+option_expr = { "Some" ~ "(" ~ expression ~ ")" | "None" }
 
-program = _{ SOI ~ (dependency | COMMENT | embed | command)* ~ EOI }
+type_def = { "type" ~ identifier ~ "=" ~ type_expr }
+type_expr = { identifier | result_type | option_type | union_type }
+result_type = { "Result" ~ "[" ~ type ~ "," ~ type ~ "]" }
+option_type = { "Option" ~ "[" ~ type ~ "]" }
+union_type = { type ~ ("|" ~ type)+ }
+trait_def = { "trait" ~ identifier ~ "{" ~ (identifier ~ ":" ~ type ~ ";")* ~ "}" }
+
+program = _{ SOI ~ (dependency | COMMENT | embed | command | type_def | trait_def)* ~ EOI }
