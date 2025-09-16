@@ -21,6 +21,10 @@ pub fn optimize_ast(ast: Vec<AstNode>) -> Vec<AstNode> {
                 }
                 optimized.push(AstNode::Loop(count, cmd));
             }
+            AstNode::Match { value, arms } => {
+                // Constant folding for match (stub)
+                optimized.push(AstNode::Match { value, arms });
+            }
             _ => optimized.push(node),
         }
     }
