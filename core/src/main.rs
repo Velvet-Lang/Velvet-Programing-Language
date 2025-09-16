@@ -16,7 +16,7 @@ fn main() -> Result<(), String> {
     let output_file = &args[3];
 
     let input = fs::read_to_string(input_file).map_err(|e| format!("Failed to read {}: {}", input_file, e))?;
-    let (_, ast) = parser::parse_velvet(&input).map_err(|e| format!("Parse error: {:?}", e))?;
+    let ast = parser::parse_velvet(&input)?;
     let optimized = optimizer::optimize_ast(ast);
     semantic::analyze_ast(&optimized)?;
     codegen::generate_o(&optimized, output_file)?;
