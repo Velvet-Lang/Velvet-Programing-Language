@@ -1,54 +1,20 @@
-[gui-web] @ Import biblioteki GUI z GitHub
-[logger] @ Import biblioteki do logowania
-@ Zaawansowany przykład programu Velvet z obsługą różnych systemów i pipeline’ami
+[Zależność] python3 @ Python for scripting
+[Zależność] shell @ Shell for system commands
 
-@ Komendy systemowe zależne od OS
-if [linux]; then
-    sudo apt update
-    echo "Linux: System zaktualizowany"
-fi
-if [windows]; then
-    powershell -Command "Get-Date"
-    echo "Windows: Wyświetlono datę"
-fi
-if [macos]; then
-    sw_vers
-    echo "MacOS: Wyświetlono wersję systemu"
-fi
-
-#python {
-@ Sekcja Pythona - bardziej złożona logika
-import time
-import sys
-
-def log_message(msg):
-    print(f"[LOG {time.ctime()}] {msg}")
-
-log_message("Uruchamianie programu Velvet w Pythonie")
-x = 42
-y = x * 2
-log_message(f"Wartość y: {y}")
-if sys.platform == "linux":
-    log_message("Wykryto Linux")
-elif sys.platform == "win32":
-    log_message("Wykryto Windows")
-elif sys.platform == "darwin":
-    log_message("Wykryto MacOS")
+#python { @ Compute something in Python
+def add(a, b):
+    return a + b
+result = add(5, 3)
+print(f"Python computed: {result}")
 }
 
-#velvet {
-@ Deklaratywny Velvet - zaawansowany pipeline
-10 < X @ Przypisanie: X = 10
-3 < Y @ Przypisanie: Y = 3
-X * Y > Z @ Mnożenie: Z = X * Y = 30
-Z ^ square ^ inc > W @ Pipeline: W = inc(square(Z)) = inc(900) = 901
-W ^ inc > V @ Kolejne zastosowanie: V = inc(W) = 902
-?V @ Wyświetl V (powinno być 902)
-@ Dodatkowa operacja z nową zmienną
-5 < A
-A * V > B @ B = 5 * 902 = 4510
-?B @ Wyświetl B
-@ Pipeline z wieloma operacjami
-B ^ square ^ square > C @ C = square(square(B)) = square(4510^2) = ogromna liczba
-?C @ Wyświetl C
+#shell { @ Run system command
+whoami
+echo "Running on $HOSTNAME"
 }
+
+[If] > result == 8 | [Output] > "Python result is correct!" | print @ Conditional output
+
+[Loop] > 3 | [Output] > "Iteration $INDEX" | print @ Declarative loop
+
+[Output] > "Advanced Velvet completed!" | print @ Final output
