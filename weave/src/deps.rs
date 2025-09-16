@@ -14,7 +14,7 @@ pub fn install_dep(lib: &str) {
         .unwrap()
         .execute(ResetColor)
         .unwrap();
-    // Placeholder: Download from Velvet repo or system package manager
+    // Placeholder: Download from Velvet repo
 }
 
 pub fn install_in(lib: &str) {
@@ -41,4 +41,15 @@ pub fn install_o(lib: &str) {
         .unwrap()
         .execute(ResetColor)
         .unwrap();
+}
+
+pub fn add_package(pkg: &str) {
+    stdout()
+        .execute(SetForegroundColor(Color::Cyan))
+        .unwrap()
+        .execute(Print(format!("Adding package {}...\n", pkg)))
+        .unwrap()
+        .execute(ResetColor)
+        .unwrap();
+    // Placeholder: Fetch from GitHub/SourceForge
 }
