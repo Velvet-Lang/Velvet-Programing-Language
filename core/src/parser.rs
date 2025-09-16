@@ -12,7 +12,7 @@ use nom::{
 pub enum AstNode {
     Dependency(String),
     Comment(String),
-    Embed(String, String),  // Language, Code
+    Embed(String, String), // Language, Code
     Command(String),
     Output(String),
 }
@@ -28,11 +28,18 @@ pub fn parse_velvet(input: &str) -> IResult<&str, Vec<AstNode>> {
 }
 
 fn parse_dependency(input: &str) -> IResult<&str, AstNode> {
-    delimited(tag("["), map(alpha1, |s: &str| AstNode::Dependency(s.to_string())), tag("]"))(input)
+    delimited(
+        tag("["),
+        map(alpha1, |s: &str| AstNode::Dependency(s.to_string())),
+        tag("]"),
+    )(input)
 }
 
 fn parse_comment(input: &str) -> IResult<&str, AstNode> {
-    preceded(tag("@"), map(take_while(|c| c != '\n'), |s: &str| AstNode::Comment(s.to_string())))(input)
+    preceded(
+        tag("@"),
+        map(take_while(|c| c != '\n'), |s: &str| AstNode::Comment(s.to_string())),
+    )(input)
 }
 
 fn parse_embed(input: &str) -> IResult<&str, AstNode> {
@@ -43,9 +50,12 @@ fn parse_embed(input: &str) -> IResult<&str, AstNode> {
 }
 
 fn parse_command(input: &str) -> IResult<&str, AstNode> {
-    map(take_while(|c| c != '\n'), |s: &str| AstNode::Command(s.to_string()))(input)
+    map(take_while(|c| c != '\n'), |s: &str| AstNode::Command(s.trim().to_string()))(input)
 }
 
 fn parse_output(input: &str) -> IResult<&str, AstNode> {
-    preceded(tag("[Output] >"), map(take_while(|c| c != '|'), |s: &str| AstNode::Output(s.trim().to_string())))(input)
+    preceded(
+        tag("[Output] >"),
+        map(take_while(|c| c != '|'), |s: &str| AstNode::Output(s.trim().to_string())),
+    )(input)
 }
