@@ -37,6 +37,7 @@ enum Commands {
     Fmt,
     Doc,
     Repl,
+    Lsp,
 }
 
 fn cyber_print(msg: &str) {
@@ -113,6 +114,13 @@ fn main() {
             cyber_print("Starting Velvet REPL...");
             std::process::Command::new("cargo")
                 .args(&["run", "--bin", "velvet-repl"])
+                .status()
+                .unwrap();
+        }
+        Commands::Lsp => {
+            cyber_print("Starting Velvet LSP...");
+            std::process::Command::new("cargo")
+                .args(&["run", "--bin", "velvet-lsp"])
                 .status()
                 .unwrap();
         }
