@@ -1,0 +1,10 @@
+[package]
+name = "velvet-lsp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pest = "2.7.12"
+pest_derive = "2.7.12"
+tower-lsp = "0.20.0"
+serde_json = "1.0"
