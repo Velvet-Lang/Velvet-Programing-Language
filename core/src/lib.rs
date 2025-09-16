@@ -2,6 +2,7 @@ pub mod parser;
 pub mod compiler;
 pub mod ffi;
 pub mod runtime;
+pub mod interpreter;
 
 use anyhow::Result;
 use std::fs;
