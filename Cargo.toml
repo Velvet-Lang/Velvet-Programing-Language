@@ -8,4 +8,4 @@ nom = "7.1.3"  # For parser combinators
 
 [[bin]]
 name = "velvetc"
-path = "src/main.rs"
+path = "core/src/main.rs"
