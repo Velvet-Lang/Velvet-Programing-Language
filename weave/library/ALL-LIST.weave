@@ -1,4 +1,5 @@
-crich ===> https://github.com/Velvet-Lang/crich-cli
-silk ===> https://github.com/Velvet-Lang/silk-gui
-crux ===> https://github.com/Velvet-Lang/crux-lib
-nestdb ===> https://github.com/Velvet-Lang/nestdb-lib
+crich ===> https://github.com/Velvet-Lang/crich-cli.git
+silk ===> https://github.com/Velvet-Lang/silk-gui.git
+crux ===> https://github.com/Velvet-Lang/crux-lib.git
+nestdb ===> https://github.com/Velvet-Lang/nestdb-lib.git
+aegis ===> https://github.com/Velvet-Lang/aegis-lib.git
