@@ -1,18 +1,7 @@
-[gui-web] @ Import biblioteki GUI
-sudo apt update @ Aktualizacja systemu (Linux)
-echo "System zaktualizowany!"
+[Zależność] python3 @ Declare Python dependency
 
-#python {
-print("Witaj z Pythona w Velvet - BETA")
-x = 10
-print(f"Wartość x: {x}")
+#python { @ Embed Python code
+print("Hello from Python in Velvet!")
 }
 
-#velvet {
-@ Przykładowy program deklaratywny
-5 < A @ Przypisanie: A = 5
-3 < B @ Przypisanie: B = 3
-A * B > C @ Mnożenie: C = A * B
-C ^ inc > D @ Pipeline: D = inc(C)
-?D @ Wyświetl: D (powinno być 16)
-}
+[Output] > "Hello, Velvet World!" | print @ Declarative output to stdout
