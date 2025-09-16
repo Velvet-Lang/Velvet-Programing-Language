@@ -73,8 +73,8 @@ pub fn build_project(options: &[&str]) {
             .unwrap()
             .execute(ResetColor)
             .unwrap();
-        return;
-    }
+            return;
+        }
 
     for opt in options {
         stdout()
@@ -84,7 +84,7 @@ pub fn build_project(options: &[&str]) {
             .unwrap()
             .execute(ResetColor)
             .unwrap();
-        // Placeholder: Implement deb/rpm/bin/appimage packaging
+        // Placeholder: Implement deb/rpm/bin/appimage
     }
 
     stdout()
@@ -94,4 +94,15 @@ pub fn build_project(options: &[&str]) {
         .unwrap()
         .execute(ResetColor)
         .unwrap();
+}
+
+pub fn run_tests() {
+    stdout()
+        .execute(SetForegroundColor(Color::Cyan))
+        .unwrap()
+        .execute(Print("Running tests (stub)...\n"))
+        .unwrap()
+        .execute(ResetColor)
+        .unwrap();
+    // Placeholder: Run test files in src/test/
 }
