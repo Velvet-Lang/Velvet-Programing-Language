@@ -25,6 +25,7 @@ enum Commands {
     Install { lib: String },
     InstallIn { lib: String },
     InstallO { lib: String },
+    Add { pkg: String },
     Build {
         #[arg(long)] deb: bool,
         #[arg(long)] rpm: bool,
@@ -32,6 +33,10 @@ enum Commands {
         #[arg(long)] appimage: bool,
     },
     Run,
+    Test,
+    Fmt,
+    Doc,
+    Repl,
 }
 
 fn cyber_print(msg: &str) {
@@ -71,6 +76,10 @@ fn main() {
             cyber_print(&format!("Installing {} in isolated env...", lib));
             deps::install_o(&lib);
         }
+        Commands::Add { pkg } => {
+            cyber_print(&format!("Adding package {}...", pkg));
+            deps::add_package(&pkg);
+        }
         Commands::Build { deb, rpm, bin, appimage } => {
             cyber_print("Building project...");
             let options = vec![deb, rpm, bin, appimage]
@@ -83,6 +92,29 @@ fn main() {
         Commands::Run => {
             cyber_print("Running in dev mode...");
             run::run_dev();
+        }
+        Commands::Test => {
+            cyber_print("Running tests...");
+            build::run_tests();
+        }
+        Commands::Fmt => {
+            cyber_print("Formatting code...");
+            // Call velvet-fmt
+            std::process::Command::new("cargo")
+                .args(&["run", "--bin", "velvet-fmt"])
+                .status()
+                .unwrap();
+        }
+        Commands::Doc => {
+            cyber_print("Generating documentation...");
+            // Placeholder: Generate HTML docs
+        }
+        Commands::Repl => {
+            cyber_print("Starting Velvet REPL...");
+            std::process::Command::new("cargo")
+                .args(&["run", "--bin", "velvet-repl"])
+                .status()
+                .unwrap();
         }
     }
 }
