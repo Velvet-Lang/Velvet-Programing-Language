@@ -6,6 +6,10 @@ edition = "2021"
 [dependencies]
 pest = "2.7.12"
 pest_derive = "2.7.12"
+serde = { version = "1.0", features = ["derive"] }  # Serialization
+serde_json = "1.0"  # JSON support
+serde_yaml = "0.9"  # YAML support
+toml = "0.8"  # TOML support
 
 [[bin]]
 name = "velvetc"
