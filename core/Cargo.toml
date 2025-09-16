@@ -4,7 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib", "staticlib"]
+name = "velvet_core"
+path = "core/src/lib.rs"
+
+[[bin]]
+name = "weave"
+path = "core/src/bin/weave.rs"
 
 [dependencies]
 anyhow = "1.0"
