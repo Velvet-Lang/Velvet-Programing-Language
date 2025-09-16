@@ -1,0 +1,8 @@
+MyVelvetProject
+[Dependences]
+python3
+shell
+[Dependences - Version]
+python3 = 3.10
+[BUILD]
+> bin
