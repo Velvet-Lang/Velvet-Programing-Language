@@ -1,20 +1,28 @@
-[Zależność] python3 @ Python for scripting
-[Zależność] shell @ Shell for system commands
+[Zależność] python3
+[Zależność] js
 
-#python { @ Compute something in Python
-def add(a, b):
-    return a + b
-result = add(5, 3)
-print(f"Python computed: {result}")
+type MyResult = Result[int, string]
+type MyOption = Option[string]
+trait Printable {
+    print: () -> string;
 }
 
-#shell { @ Run system command
-whoami
-echo "Running on $HOSTNAME"
+let mut value = 5
+#python {
+result = value * 2
 }
 
-[If] > result == 8 | [Output] > "Python result is correct!" | print @ Conditional output
+match value {
+    0 -> "Zero"
+    1..10 -> "Small"
+    _ -> "Other"
+} |> [Output] > | print
 
-[Loop] > 3 | [Output] > "Iteration $INDEX" | print @ Declarative loop
+[If] > result == 10 | [Output] > "Python computed correctly" | print
 
-[Output] > "Advanced Velvet completed!" | print @ Final output
+[Loop] > 3 | [Output] > "Iteration $INDEX" | print
+
+spawn async_func()
+try risky_op()?
+
+[Output] > "Advanced Velvet done" | print
