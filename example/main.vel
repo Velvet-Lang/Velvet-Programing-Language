@@ -1,4 +1,4 @@
-[Library-example] python3 @ Python dependency
+[zaleznosc] python3 @ Python dependency
 
 let x = 5 @ Type inferred as int
 let mut y: string = "Hello" @ Explicit type, mutable
