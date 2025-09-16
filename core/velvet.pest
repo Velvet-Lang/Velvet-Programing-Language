@@ -1,29 +1,16 @@
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" }
-COMMENT = @{ "@" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) }
+COMMENT = { "@" ~ (!"\n" ~ ANY)* ~ ("\n" | EOI) }
 
-ident = { ('a'..'z' | 'A'..'Z' | '_' | '-') ~ ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-')* }
+identifier = { ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_")* }
 string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
-path = { ('a'..'z' | 'A'..'Z' | '/' | '.' | '-')+ }
 
-dependency = { "[" ~ ident ~ "]" }
-redir = { (">" | "<") ~ WHITESPACE? ~ path }
-command = { ident ~ (WHITESPACE ~ (string | ident))* ~ (WHITESPACE? ~ redir)? }
-sys_command = { ("sudo" | "apt" | "echo" | "powershell" | "dir" ) ~ (WHITESPACE ~ (string | ident))* }  // Rozszerzone
+dependency = { "[" ~ "Zależność" ~ "]" ~ identifier }
+embed = { "#" ~ identifier ~ "{" ~ (!"}" ~ ANY)* ~ "}" }
+output = { "[Output] >" ~ string ~ "| print" }
+if_stmt = { "[If] >" ~ expression ~ "|" ~ command }
+loop_stmt = { "[Loop] >" ~ (ASCII_DIGIT+ | identifier) ~ "|" ~ command }
+command = { output | if_stmt | loop_stmt }
 
-section = { "#" ~ ident ~ WHITESPACE? ~ "{" ~ ANY* ~ "}" }
+expression = { identifier ~ ("==" | "!=" | "<" | ">") ~ (ASCII_DIGIT+ | identifier) }
 
-decl_line = { ^{
-    (ASCII_DIGIT+ | ident) ~ WHITESPACE? ~ "<" ~ WHITESPACE? ~ ident |
-    ident ~ WHITESPACE? ~ ("*" | "^") ~ WHITESPACE? ~ ident ~ (WHITESPACE? ~ ("*" | "^") ~ WHITESPACE? ~ ident)* ~ WHITESPACE? ~ ">" ~ WHITESPACE? ~ ident |
-    "?" ~ ident
-} }
-
-if_block = { 
-    "if" ~ WHITESPACE ~ "[" ~ ident ~ "]" ~ WHITESPACE? ~ ";" ~ WHITESPACE? ~ 
-    "then" ~ WHITESPACE? ~ statement* ~ WHITESPACE? ~ 
-    "fi" 
-}
-
-statement = _{ dependency | command | sys_command | COMMENT | section | decl_line | if_block }
-
-program = { SOI ~ (statement ~ WHITESPACE?)* ~ EOI }
+program = _{ SOI ~ (dependency | COMMENT | embed | command)* ~ EOI }
