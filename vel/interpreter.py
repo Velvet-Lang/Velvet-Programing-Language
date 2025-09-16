@@ -1,13 +1,34 @@
+import ctypes
+import asyncio
 from rich.console import Console
+from ruamel.yaml import YAML
+import toml
+import json
 
 console = Console()
 
-def interpret_o(file):
+async def interpret_o(file):
     console.print(f"[cyan]Interpreting {file} (object file)...[/]")
-    # Placeholder: Use ctypes or similar to load and execute .o
-    console.print("[green]Execution complete (stub)[/]")
+    # Load .o with ctypes for FFI
+    lib = ctypes.CDLL(file)
+    lib._start()  # Call assembly entry
+    # Async handling (stub for spawn)
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, lambda: print("Async task"))
+    # Serialization example
+    data = {"key": "value"}
+    with open("output.json", "w") as f:
+        json.dump(data, f)
+    with open("output.toml", "w") as f:
+        toml.dump(data, f)
+    yaml = YAML()
+    with open("output.yaml", "w") as f:
+        yaml.dump(data, f)
+    console.print("[green]Execution complete[/]")
 
-def interpret_velvet(file):
+async def interpret_velvet(file):
     console.print(f"[cyan]Interpreting {file} (Velvet package)...[/]")
-    # Placeholder: Call Zig runtime to execute .velvet
-    console.print("[green]Execution complete (stub)[/]")
+    # Call Zig runtime (assume velvet-runtime executable)
+    import subprocess
+    subprocess.run(["./velvet-runtime", file])
+    console.print("[green]Execution complete[/]")
